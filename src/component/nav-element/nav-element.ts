@@ -23,10 +23,10 @@ export class NavElement extends LitElement {
         About
       </router-link>
       <router-link .to=${{
-        name: RouteNames.DATE_PICKER
+        name: RouteNames.GEOLOCATION_PAGE
       }} 
-      title="DatePicker">
-        Date Picker
+      title="GeolocationPage">
+        Geolocation Page
       </router-link>
       <router-link to="xyz">Not found</router-link>
     </nav>`;
