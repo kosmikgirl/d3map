@@ -17,7 +17,10 @@ export default class GeologationPage extends PageElement {
   }
 
   @property({type: String})
-  apiEndpoint = 'http://universities.hipolabs.com/search';
+  countryName = 'peru';
+
+  @property({type: String})
+  apiEndpoint = 'https://restcountries.com/v3.1/name';
 
   @query('.title')
   _title: any;
@@ -39,17 +42,13 @@ export default class GeologationPage extends PageElement {
     // const options = {
     //   method: 'GET',
     //   headers: {
-    //   'X-RapidAPI-Key': '3f890618fcmsh44f98769ab0cd63p1e1551jsn9ec7a3c3c434',
-    //   'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
+    //   'access_key': 'd6bb0a5c0160affc2a4dcc18f508dfc2'
     //   }
     // }
-    fetch(this.apiEndpoint)
+    fetch(`${this.apiEndpoint}/${this.countryName}`)
     .then(res => res.json())
     .then(data => console.log(data))
     .catch(err => console.log(err))
-
-
-
   }
 
 
@@ -57,10 +56,8 @@ export default class GeologationPage extends PageElement {
     return html`<div>
     
       <h1 class="title">Geolocation Page</h1>
-      <button @click=${this.clickHandler}>Change color</button>
+      <button @click=${this.clickHandler}>Change title color</button>
       <button @click=${this.insertMap}>Insert Map</button>
-
-      ${this.insertChart()}
 
       <div class="map">
         <svg width='900px' height='600px'></svg>
@@ -160,10 +157,7 @@ export default class GeologationPage extends PageElement {
 
 
   private clickHandler(){
-    // console.log(d3);
-    console.log(this._title);
     d3.select(this._title).style('color', 'blue');
-
   }
 
   // private buildMap(){
