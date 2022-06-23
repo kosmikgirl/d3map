@@ -19,11 +19,13 @@
     "@easepick/bundle": "^1.2.0",
     "@lit/localize": "^0.11.1",
     "@reduxjs/toolkit": "^1.6.2",
+    "@types/geojson": "^7946.0.8",
     "d3": "^7.4.4",
     "lit": "^2.1.2",
     "navigo": "^8.11.1",
     "pwa-helpers": "^0.9.1",
-    "seng-device-state-tracker": "^1.1.4"
+    "seng-device-state-tracker": "^1.1.4",
+    "topojson": "^3.0.2"
   },
   "devDependencies": {
     "@lit/localize-tools": "^0.5.0",
@@ -32,6 +34,7 @@
     "@types/d3": "^7.4.0",
     "@types/navigo": "^8.1.2",
     "@types/node": "^14.17.34",
+    "@types/topojson": "^3.2.3",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "@web/rollup-plugin-html": "^1.10.1",
