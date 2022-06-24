@@ -17,9 +17,6 @@ export default class GeologationPage extends PageElement {
   }
 
   @property({type: String})
-  countryName = 'peru';
-
-  @property({type: String})
   apiEndpoint = 'https://restcountries.com/v3.1/name';
 
   @query('.title')
@@ -45,10 +42,10 @@ export default class GeologationPage extends PageElement {
     //   'access_key': 'd6bb0a5c0160affc2a4dcc18f508dfc2'
     //   }
     // }
-    fetch(`${this.apiEndpoint}/${this.countryName}`)
-    .then(res => res.json())
-    .then(data => console.log(data))
-    .catch(err => console.log(err))
+    // fetch(`${this.apiEndpoint}/${this.countryName}`)
+    // .then(res => res.json())
+    // .then(data => console.log(data))
+    // .catch(err => console.log(err))
   }
 
 
@@ -128,8 +125,17 @@ export default class GeologationPage extends PageElement {
 
 
   private selected(event: any) {
+    const countryName = event.path[0].__data__.properties.name;
+    this.callCountryApi(countryName);
     d3.select(this._selected).classed('selected', false);
     d3.select(event.path[0]).classed('selected', true);
+  }
+
+  private callCountryApi(name: String){
+    fetch(`${this.apiEndpoint}/${name}`)
+    .then(res => res.json())
+    .then(data => console.log(data))
+    .catch(err => console.log(err))
   }
 
 
