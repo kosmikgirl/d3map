@@ -21,6 +21,8 @@ export default class HomePage extends PageElement {
     return html`<div>
     
     <h2>${localize('HomePage')}</h2>
+
+    <p>HomePage loaded</p>
     
     </div>`;
   }
