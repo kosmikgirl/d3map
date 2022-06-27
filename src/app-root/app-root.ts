@@ -46,6 +46,10 @@ export class AppRoot extends connect(store)(LitElement) {
     //     );
     //   });
     // }
+
+    // this is how to set an image
+
+    // <image-element .imageSet=${CatImage} alt="Cat"></image-element>
   }
 
   connectedCallback() {
@@ -61,7 +65,6 @@ export class AppRoot extends connect(store)(LitElement) {
       </header>
       <main>
         <router-element></router-element>
-        <image-element .imageSet=${CatImage} alt="Cat"></image-element>
       </main>
     `;
   }

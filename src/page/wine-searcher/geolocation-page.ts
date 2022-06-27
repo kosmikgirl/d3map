@@ -60,10 +60,13 @@ export default class GeologationPage extends PageElement {
   }
 
   @property({type: String})
-  apiEndpoint = 'https://restcountries.com/v3.1/name';
+  apiEndpoint = 'https://restcountries.com/v3.1';
 
   @property({type: Object})
   countryInformation: CountryTypes = {};
+
+  @property({type: Object})
+  countryInfoByCode: CountryTypes = {};
 
   @query('.title')
   _title: any;
@@ -205,10 +208,17 @@ export default class GeologationPage extends PageElement {
   }
 
   private callCountryApi(name: String){
-    fetch(`${this.apiEndpoint}/${name}`)
+    fetch(`${this.apiEndpoint}/name/${name}`)
     .then(res => res.json())
     .then(data => this.countryInformation = data[0])
     .catch(err => console.log(err))
+  }
+
+  private callCountryCodeApo(code: String) {
+    fetch(`${this.apiEndpoint}/alpha/${code}`)
+    .then(res => res.json())
+    .then(data => this.countryInfoByCode = data[0])
+    .catch(err => console.log(err));
   }
 
 
