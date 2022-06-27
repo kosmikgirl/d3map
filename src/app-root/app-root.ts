@@ -63,7 +63,6 @@ export class AppRoot extends connect(store)(LitElement) {
         <router-element></router-element>
         <image-element .imageSet=${CatImage} alt="Cat"></image-element>
       </main>
-      <footer>Footer</footer>
     `;
   }
 }
