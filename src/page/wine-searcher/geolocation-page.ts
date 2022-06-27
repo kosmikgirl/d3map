@@ -87,10 +87,14 @@ export default class GeologationPage extends PageElement {
     super.connectedCallback();
   }
 
-  updated(changedProperties: any) {
-    console.log(changedProperties); // logs previous values
-    console.log(this.countryInformation); // logs current value
-  }
+  // updated(changedProperties: any) {
+  //   console.log(changedProperties); // logs previous values
+  //   console.log(this.countryInformation); // logs current value
+
+  //   this.countryInformation.borders?.map((countryCode) => {
+  //     this.callCountryCodeApi(countryCode);
+  //   })
+  // }
 
 
 
@@ -214,12 +218,13 @@ export default class GeologationPage extends PageElement {
     .catch(err => console.log(err))
   }
 
-  private callCountryCodeApo(code: String) {
-    fetch(`${this.apiEndpoint}/alpha/${code}`)
-    .then(res => res.json())
-    .then(data => this.countryInfoByCode = data[0])
-    .catch(err => console.log(err));
-  }
+  // private callCountryCodeApi(code: String) {
+  //   fetch(`${this.apiEndpoint}/alpha/${code}`)
+  //   .then(res => res.json())
+  //   .then(data => this.countryInfoByCode = data[0])
+  //   .catch(err => console.log(err));
+  //   console.log(this.countryInfoByCode);
+  // }
 
 
   private insertChart() {
