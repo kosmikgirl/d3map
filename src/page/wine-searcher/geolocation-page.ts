@@ -5,8 +5,51 @@ import * as d3 from "d3";
 import * as topojson from "topojson";
 import styles from './geolocation-page.scss';
 import {query} from 'lit/decorators/query.js';
-import data from '../../data.json';
 import { zoom } from 'd3';
+
+export type CountryTypes = {
+  altSpellings?: Array<String>;
+  area?: Number;
+  borders?: Array<String>;
+  capital?: Array<String>;
+  capitalInfo?: any;
+  car?: any;
+  cca2?: String;
+  cca3?: String;
+  ccn3?: String;
+  cioc?: String;
+  coatOfArms?: any;
+  continents?: Array<String>;
+  currencies?: any;
+  demonyms?: any;
+  fifa?: String;
+  flag?: String;
+  flags?: any;
+  gini?: any;
+  idd?: any;
+  independent?: boolean;
+  landlocked?: boolean;
+  languages?: any;
+  latlng?: Array<Number>
+  maps?: any;
+  name?: NameTypes;
+  population?: Number;
+  postalCode?: any;
+  region?: String;
+  startOfWeek?: String;
+  status?: String;
+  subregion?: String;
+  timezones?: Array<String>;
+  tld?: Array<String>;
+  translations?: any;
+  unMember?: boolean;
+}
+
+type NameTypes = {
+  common?: String;
+  nativeName?: any;
+  official?: String;
+};
 
 @customElement('geolocation-page')
 export default class GeologationPage extends PageElement {
@@ -18,6 +61,9 @@ export default class GeologationPage extends PageElement {
 
   @property({type: String})
   apiEndpoint = 'https://restcountries.com/v3.1/name';
+
+  @property({type: Object})
+  countryInformation: CountryTypes = {};
 
   @query('.title')
   _title: any;
@@ -36,29 +82,56 @@ export default class GeologationPage extends PageElement {
 
   connectedCallback() {
     super.connectedCallback();
-    // const options = {
-    //   method: 'GET',
-    //   headers: {
-    //   'access_key': 'd6bb0a5c0160affc2a4dcc18f508dfc2'
-    //   }
-    // }
-    // fetch(`${this.apiEndpoint}/${this.countryName}`)
-    // .then(res => res.json())
-    // .then(data => console.log(data))
-    // .catch(err => console.log(err))
   }
+
+  updated(changedProperties: any) {
+    console.log(changedProperties); // logs previous values
+    console.log(this.countryInformation); // logs current value
+  }
+
 
 
   render() {
     return html`<div>
     
       <h1 class="title">Geolocation Page</h1>
-      <button @click=${this.clickHandler}>Change title color</button>
       <button @click=${this.insertMap}>Insert Map</button>
 
       <div class="map">
         <svg width='900px' height='600px'></svg>
       </div>
+
+      ${Object.keys(this.countryInformation).length !== 0 ? 
+        html`
+          <div class="country-details">
+            <ul>
+              <li>
+                <b>Name:</b>
+                ${this.countryInformation.name?.common}</li>
+              <li>
+                <b>Official Name:</b>
+                ${this.countryInformation.name?.official}
+               </li>
+              <li>
+                <b>Subregion:</b>
+                ${this.countryInformation.subregion}
+               </li>
+              <li>
+                <b>Capital City: </b>
+                ${this.countryInformation.capital}
+                </li>
+              <li>
+                <b>Population: </b>
+                ${this.countryInformation.population}
+              </li>
+              <li>
+                <b>Flag: </b>
+                ${this.countryInformation.flag}
+              </li>
+            </ul>
+          </div>
+        ` : ''
+      }
     
     </div>`;
   }
@@ -134,7 +207,7 @@ export default class GeologationPage extends PageElement {
   private callCountryApi(name: String){
     fetch(`${this.apiEndpoint}/${name}`)
     .then(res => res.json())
-    .then(data => console.log(data))
+    .then(data => this.countryInformation = data[0])
     .catch(err => console.log(err))
   }
 
@@ -159,50 +232,5 @@ export default class GeologationPage extends PageElement {
     console.log(div.node())
     return div.node();
   }
-
-
-
-  private clickHandler(){
-    d3.select(this._title).style('color', 'blue');
-  }
-
-  // private buildMap(){
-  //   const context = this.renderRoot.context2d(33,55);
-  // }
-  
-
-  // private keyframes() {
-  //   const keyframes = [];
-  //   let ka, ab, kb, bb;
-  //   for ([[ka, ab], [kb, bb]] of d3.pairs(datevalues)) {
-  //     for (let i = 0; i < 10; ++i) {
-  //       const t = i / 10;
-  //       keyframes.push([
-  //         new Date(ka * (1 - t) + kb * t),
-  //         this.rank(name => (a.get(name) || 0) * (1 - t) + (b.get(name) || 0) * t)
-  //       ]);
-  //     }
-  //   }
-  //   keyframes.push([new Date(kb), rank(name => b.get(name) || 0)]);
-  //   return keyframes;
-  // }
-  
-
-  // private rank(value: any) {
-  //   const names = new Set(data.map(d => d.name));
-  //   let info = Array.from(names, name => ({name, value: value(name)}));
-  //   info.sort((a, b) => d3.descending(a.value, b.value));
-  //   for (let i = 0; i < info.length; ++i) info[i].rank = Math.min(12, i);
-    
-  //   return info;
-  // }
-
-  // private bars(svg: any){}
-  // private axis(svg: any){}
-  // private labels(svg: any){}
-  // private ticker(svg: any){}
-  
-
-
 
 }
