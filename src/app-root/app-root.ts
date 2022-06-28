@@ -48,8 +48,11 @@ export class AppRoot extends connect(store)(LitElement) {
     // }
 
     // this is how to set an image
-
     // <image-element .imageSet=${CatImage} alt="Cat"></image-element>
+
+
+    // this is to set the title
+    // <h1>${!this.isInitialized ? 'Loading...' : 'Lit Scaffold'}</h1>
   }
 
   connectedCallback() {
@@ -60,7 +63,6 @@ export class AppRoot extends connect(store)(LitElement) {
   render() {
     return html`
       <header>
-        <h1>${!this.isInitialized ? 'Loading...' : 'Lit Scaffold'}</h1>
         <nav-element></nav-element>
       </header>
       <main>
