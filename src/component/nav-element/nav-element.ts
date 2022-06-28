@@ -1,15 +1,15 @@
-import {html, LitElement} from 'lit';
+import {html, css, LitElement} from 'lit';
 import {RouteDataParam, RouteNames} from '../../data/enum';
 import {customElement} from 'lit/decorators.js';
-import {styles} from './styles';
+import styles from './nav-element.scss';
 import '../router/router-link/router-link';
 
 @customElement('nav-element')
 export class NavElement extends LitElement {
-  static styles = styles;
+  static styles = [ css([styles] as unknown as TemplateStringsArray) ];
 
   render() {
-    return html`<nav>
+    return html`<nav class="navbar">
       <router-link to="/" title="HomePage">Home</router-link>
       <router-link
         .to=${{
