@@ -65,8 +65,8 @@ export default class GeologationPage extends PageElement {
   @property({type: Object})
   countryInformation: CountryTypes = {};
 
-  @property({type: Object})
-  countryInfoByCode: CountryTypes = {};
+  @property({type: Array})
+  countryInfoByCode: any[] = [];
 
   @query('.title')
   _title: any;
@@ -87,14 +87,10 @@ export default class GeologationPage extends PageElement {
     super.connectedCallback();
   }
 
-  // updated(changedProperties: any) {
-  //   console.log(changedProperties); // logs previous values
-  //   console.log(this.countryInformation); // logs current value
-
-  //   this.countryInformation.borders?.map((countryCode) => {
-  //     this.callCountryCodeApi(countryCode);
-  //   })
-  // }
+  updated(changedProperties: any) {
+    console.log(changedProperties); // logs previous values
+    console.log(this.countryInformation.borders); // logs current value
+  }
 
 
 
@@ -134,6 +130,12 @@ export default class GeologationPage extends PageElement {
               <li>
                 <b>Flag: </b>
                 ${this.countryInformation.flag}
+              </li>
+              <li>
+                <b>Borders: </b>
+                  ${this.countryInformation.borders?.map((border, index, arr) => html`<p class="border">
+                  ${arr.length - 1 === index ? border : `${border},`}
+                </p>`)}
               </li>
             </ul>
           </div>
@@ -218,34 +220,28 @@ export default class GeologationPage extends PageElement {
     .catch(err => console.log(err))
   }
 
-  // private callCountryCodeApi(code: String) {
-  //   fetch(`${this.apiEndpoint}/alpha/${code}`)
-  //   .then(res => res.json())
-  //   .then(data => this.countryInfoByCode = data[0])
-  //   .catch(err => console.log(err));
-  //   console.log(this.countryInfoByCode);
-  // }
 
 
-  private insertChart() {
-    const data = [4, 8, 15, 50, 23, 42];
+
+  // private insertChart() {
+  //   const data = [4, 8, 15, 50, 23, 42];
     
-    const div = d3.create("div")
-    .style("font", "10px sans-serif")
-    .style("text-align", "right")
-    .style("color", "white");
+  //   const div = d3.create("div")
+  //   .style("font", "10px sans-serif")
+  //   .style("text-align", "right")
+  //   .style("color", "white");
 
-    div.selectAll("div")
-    .data(data) 
-    .join("div")
-      .style("background", "steelblue")
-      .style("padding", "3px")
-      .style("margin", "1px")
-      .style("width", d => `${d * 10}px`)
-      .text(d => d);
+  //   div.selectAll("div")
+  //   .data(data) 
+  //   .join("div")
+  //     .style("background", "steelblue")
+  //     .style("padding", "3px")
+  //     .style("margin", "1px")
+  //     .style("width", d => `${d * 10}px`)
+  //     .text(d => d);
 
-    console.log(div.node())
-    return div.node();
-  }
+  //   console.log(div.node())
+  //   return div.node();
+  // }
 
 }
