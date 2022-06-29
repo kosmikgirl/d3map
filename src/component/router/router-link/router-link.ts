@@ -1,7 +1,7 @@
-import {LitElement, html} from 'lit';
+import {LitElement, css, html} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import router from '../../../router/router';
-import {styles} from './styles';
+import styles from './router-link.scss';
 
 type Link = {
   name: string;
@@ -10,7 +10,7 @@ type Link = {
 
 @customElement('router-link')
 export default class RouterLink extends LitElement {
-  static styles = styles;
+  static styles = [ css([styles] as unknown as TemplateStringsArray) ];
 
   @property() to: string | Link = '/';
   @property() title: string = '';
@@ -26,7 +26,9 @@ export default class RouterLink extends LitElement {
   render() {
     return html`
       <a href=${this.to} title=${this.title} @click=${this.navigate}>
-        <slot></slot>
+        <span data-hover=${this.title}>
+          <slot></slot>
+        </span>
       </a>
     `;
   }

@@ -1,4 +1,4 @@
-import {html, LitElement} from 'lit';
+import {html, css, LitElement} from 'lit';
 import {state, customElement} from 'lit/decorators.js';
 import {connect} from 'pwa-helpers';
 import store from '../store/store';
@@ -8,11 +8,11 @@ import CatImage from '../asset/image/cat.jpg?webp';
 import '../component/router/router-element/router-element';
 import '../component/nav-element/nav-element';
 import '../component/image-element/image-element';
-import {styles} from './styles';
+import styles from './app-root.scss';
 
 @customElement('app-root')
 export class AppRoot extends connect(store)(LitElement) {
-  static styles = styles;
+  static styles = [ css([styles] as unknown as TemplateStringsArray) ];
 
   @state() private isInitialized = false;
 

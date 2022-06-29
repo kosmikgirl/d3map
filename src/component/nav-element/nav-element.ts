@@ -10,7 +10,7 @@ export class NavElement extends LitElement {
 
   render() {
     return html`<nav class="navbar">
-      <router-link to="/" title="HomePage">Home</router-link>
+      <router-link to="/" title="Home Page">Home</router-link>
       <router-link
         .to=${{
           name: RouteNames.ABOUT,
@@ -18,17 +18,17 @@ export class NavElement extends LitElement {
             [RouteDataParam.ID]: 'demo',
           },
         }}
-        title="AboutPage"
+        title="About Page"
       >
         About
       </router-link>
       <router-link .to=${{
         name: RouteNames.GEOLOCATION_PAGE
       }} 
-      title="GeolocationPage">
+      title="Geolocation Page">
         Geolocation Page
       </router-link>
-      <router-link to="xyz">Not found</router-link>
+      <router-link to="xyz" title="Not Found">Not found</router-link>
     </nav>`;
   }
 }
