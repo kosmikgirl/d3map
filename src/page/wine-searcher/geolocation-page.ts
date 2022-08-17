@@ -101,7 +101,9 @@ export default class GeologationPage extends PageElement {
 
   insertButton() {
     return !this.mapIsRendered
-      ? html`<button @click=${this.insertMap}>Insert Map</button>`
+      ? html`<button class="geomap-button" @click=${this.insertMap}>
+          Insert Map
+        </button>`
       : nothing;
   }
 
