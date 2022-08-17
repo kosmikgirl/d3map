@@ -6,7 +6,7 @@ import '../router/router-link/router-link';
 
 @customElement('nav-element')
 export class NavElement extends LitElement {
-  static styles = [ css([styles] as unknown as TemplateStringsArray) ];
+  static styles = [css([styles] as unknown as TemplateStringsArray)];
 
   render() {
     return html`<nav class="navbar">
@@ -22,10 +22,12 @@ export class NavElement extends LitElement {
       >
         About
       </router-link>
-      <router-link .to=${{
-        name: RouteNames.GEOLOCATION_PAGE
-      }} 
-      title="Geolocation Page">
+      <router-link
+        .to=${{
+          name: RouteNames.GEOLOCATION_PAGE,
+        }}
+        title="Geolocation Page"
+      >
         Geolocation Page
       </router-link>
       <router-link to="xyz" title="Not Found">Not found</router-link>

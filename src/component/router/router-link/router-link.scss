@@ -1,6 +1,5 @@
 :host {
     display: block;
-    width: 100%;
     height: 100%;
     display: flex;
     justify-content: space-around;
@@ -20,6 +19,7 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-inline: 1rem;
 
     &:hover span, &:focus span {
         -webkit-transform: translateY(-100%);
