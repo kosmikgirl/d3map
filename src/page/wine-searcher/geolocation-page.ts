@@ -93,7 +93,7 @@ export default class GeologationPage extends PageElement {
     return html`<div class="geolocation-container">
       ${this.insertButton()}
       <div class="map">
-        <svg width="900px" height="600px"></svg>
+        <svg width="900px" height="700px"></svg>
       </div>
       ${this.insertCountryCard()}
     </div>`;
