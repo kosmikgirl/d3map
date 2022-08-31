@@ -6,54 +6,15 @@ import * as topojson from 'topojson';
 import styles from './geolocation-page.scss';
 import {query} from 'lit/decorators/query.js';
 import {zoom} from 'd3';
-
-export type CountryTypes = {
-  altSpellings?: Array<String>;
-  area?: Number;
-  borders?: Array<String>;
-  capital?: Array<String>;
-  capitalInfo?: any;
-  car?: any;
-  cca2?: String;
-  cca3?: String;
-  ccn3?: String;
-  cioc?: String;
-  coatOfArms?: any;
-  continents?: Array<String>;
-  currencies?: any;
-  demonyms?: any;
-  fifa?: String;
-  flag?: String;
-  flags?: any;
-  gini?: any;
-  idd?: any;
-  independent?: boolean;
-  landlocked?: boolean;
-  languages?: any;
-  latlng?: Array<Number>;
-  maps?: any;
-  name?: NameTypes;
-  population?: Number;
-  postalCode?: any;
-  region?: String;
-  startOfWeek?: String;
-  status?: String;
-  subregion?: String;
-  timezones?: Array<String>;
-  tld?: Array<String>;
-  translations?: any;
-  unMember?: boolean;
-};
-
-type NameTypes = {
-  common?: String;
-  nativeName?: any;
-  official?: String;
-};
+import Fontawesome from 'lit-fontawesome';
+import {CountryTypes} from '../../data/type/country-types';
 
 @customElement('geolocation-page')
 export default class GeologationPage extends PageElement {
-  static styles = [css([styles] as unknown as TemplateStringsArray)];
+  static styles = [
+    Fontawesome,
+    css([styles] as ReadonlyArray<string> as TemplateStringsArray),
+  ];
 
   constructor() {
     super({title: 'GeolocationPage'});
@@ -67,6 +28,7 @@ export default class GeologationPage extends PageElement {
   countryInfoByCode: any[] = [];
 
   @state() mapIsRendered: boolean = false;
+  @state() isCardVisible: boolean = false;
 
   @query('.title')
   _title: any;
@@ -95,7 +57,7 @@ export default class GeologationPage extends PageElement {
       <div class="map">
         <svg width="900px" height="700px"></svg>
       </div>
-      ${this.insertCountryCard()}
+      ${this.isCardVisible ? this.insertCountryCard() : nothing}
     </div>`;
   }
 
@@ -111,43 +73,50 @@ export default class GeologationPage extends PageElement {
     return Object.keys(this.countryInformation).length !== 0
       ? html`
           <div class="country-details">
-            <ul>
-              <li>
-                <b>Name:</b>
-                ${this.countryInformation.name?.common}
-              </li>
-              <li>
-                <b>Official Name:</b>
-                ${this.countryInformation.name?.official}
-              </li>
-              <li>
-                <b>Subregion:</b>
-                ${this.countryInformation.subregion}
-              </li>
-              <li>
-                <b>Capital City: </b>
-                ${this.countryInformation.capital}
-              </li>
-              <li>
-                <b>Population: </b>
-                ${this.countryInformation.population}
-              </li>
-              <li>
-                <b>Flag: </b>
-                ${this.countryInformation.flag}
-              </li>
-              <li>
-                <b>Borders: </b>
-                ${this.countryInformation.borders?.map(
-                  (border, index, arr) => html`<p class="border">
-                    ${arr.length - 1 === index ? border : `${border},`}
-                  </p>`
-                )}
-              </li>
-            </ul>
+            <div class="country-details-box">
+              <i class="fas fa-times" @click=${this.handleCloseCard}></i>
+              <ul>
+                <li>
+                  <b>Name:</b>
+                  ${this.countryInformation.name?.common}
+                </li>
+                <li>
+                  <b>Official Name:</b>
+                  ${this.countryInformation.name?.official}
+                </li>
+                <li>
+                  <b>Subregion:</b>
+                  ${this.countryInformation.subregion}
+                </li>
+                <li>
+                  <b>Capital City: </b>
+                  ${this.countryInformation.capital}
+                </li>
+                <li>
+                  <b>Population: </b>
+                  ${this.countryInformation.population}
+                </li>
+                <li>
+                  <b>Flag: </b>
+                  ${this.countryInformation.flag}
+                </li>
+                <li>
+                  <b>Borders: </b>
+                  ${this.countryInformation.borders?.map(
+                    (border, index, arr) => html`<p class="border">
+                      ${arr.length - 1 === index ? border : `${border},`}
+                    </p>`
+                  )}
+                </li>
+              </ul>
+            </div>
           </div>
         `
       : nothing;
+  }
+
+  private handleCloseCard() {
+    this.isCardVisible = false;
   }
 
   private insertMap() {
@@ -227,6 +196,7 @@ export default class GeologationPage extends PageElement {
 
   private selected(event: any) {
     const countryName = event.path[0].__data__.properties.name;
+    console.log(countryName);
     this.callCountryApi(countryName);
     d3.select(this._selected).classed('selected', false);
     d3.select(event.path[0]).classed('selected', true);
@@ -235,7 +205,10 @@ export default class GeologationPage extends PageElement {
   private callCountryApi(name: String) {
     fetch(`${this.apiEndpoint}/name/${name}`)
       .then(res => res.json())
-      .then(data => (this.countryInformation = data[0]))
+      .then(data => {
+        this.countryInformation = data[0];
+        this.isCardVisible = true;
+      })
       .catch(err => console.log(err));
   }
 

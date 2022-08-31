@@ -22,6 +22,7 @@
     "@types/geojson": "^7946.0.8",
     "d3": "^7.4.4",
     "lit": "^2.1.2",
+    "lit-fontawesome": "^0.1.3",
     "navigo": "^8.11.1",
     "pwa-helpers": "^0.9.1",
     "seng-device-state-tracker": "^1.1.4",
