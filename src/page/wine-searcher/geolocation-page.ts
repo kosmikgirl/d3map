@@ -125,6 +125,7 @@ export default class GeologationPage extends PageElement {
       .geoMercator()
       .scale(140)
       .translate([900 / 2, 600 / 1.4]);
+
     const path: any = d3.geoPath(projection);
 
     const scale = 1;
@@ -138,6 +139,11 @@ export default class GeologationPage extends PageElement {
       .select(this._map)
       .append('div')
       .attr('class', 'tooltip hidden');
+
+    let graticule = d3.geoGraticule().extent([
+      [-180, -90],
+      [180 - 0.1, 90 - 0.1],
+    ]);
 
     const svg = d3
       .select(this._svg)
@@ -160,6 +166,37 @@ export default class GeologationPage extends PageElement {
       'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'
     ).then((data: any) => {
       const countries: any = topojson.feature(data, data.objects.countries);
+
+      let backLine = svg
+        .append('path')
+        .datum(graticule)
+        .attr('class', 'back-line')
+        .attr('d', path);
+
+      let backCountry = svg
+        .selectAll('.back-country')
+        .data(countries)
+        .enter()
+        .insert('path', '.back-line')
+        .attr('class', 'back-country')
+        .attr('d', path);
+
+      projection.clipAngle(90);
+
+      let line = svg
+        .append('path')
+        .datum(graticule)
+        .attr('class', 'line')
+        .attr('d', path);
+
+      let country = svg
+        .selectAll('.country')
+        .data(countries)
+        .enter()
+        .insert('path', '.line')
+        .attr('class', 'country')
+        .attr('d', path);
+
       g.selectAll('path')
         .data(countries.features)
         .enter()
@@ -167,9 +204,14 @@ export default class GeologationPage extends PageElement {
         .attr('class', 'country')
         .attr('name', (d: any) => d.properties.name)
         .attr('id', (d: any) => d.id)
+        // .append('circle')
+        // .attr('cx', 500 / 2)
+        // .attr('cy', 500 / 2)
+        // .attr('r', projection.scale())
         .on('click', event => this.selected(event))
         .on('mousemove', showTooltip)
         .on('mouseout', (d, i) => tooltip.classed('hidden', true))
+        // .datum(graticule)
         .attr('d', path);
     });
 
@@ -192,6 +234,10 @@ export default class GeologationPage extends PageElement {
         )
         .html(label);
     };
+  }
+
+  private anotherMap() {
+    // let centroid = d3.geoPath().projection(() => d).centroid;
   }
 
   private selected(event: any) {
