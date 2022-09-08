@@ -40,6 +40,8 @@ export default class GeologationPage extends PageElement {
   _char: any;
   @query('svg')
   _svg: any;
+  @query('.canvas')
+  _canvas: any;
 
   connectedCallback() {
     super.connectedCallback();
@@ -56,6 +58,9 @@ export default class GeologationPage extends PageElement {
       ${this.insertButton()}
       <div class="map">
         <svg width="900px" height="700px"></svg>
+        <!-- <div id="content">
+          <canvas width="1000" height="1000" class="canvas"></canvas>
+        </div> -->
       </div>
       ${this.isCardVisible ? this.insertCountryCard() : nothing}
     </div>`;
@@ -119,11 +124,78 @@ export default class GeologationPage extends PageElement {
     this.isCardVisible = false;
   }
 
+  private insertNewMap() {
+    this.mapIsRendered = true;
+    let geojson: any = {};
+    this.mapIsRendered = true;
+
+    let context = d3.select(this._canvas).node().getContext('2d');
+
+    let projection = d3.geoOrthographic().scale(300);
+
+    let geoGenerator = d3
+      .geoPath()
+      .projection(projection)
+      .pointRadius(4)
+      .context(context);
+
+    let yaw = 300;
+
+    d3.json(
+      'https://gist.githubusercontent.com/d3indepth/f28e1c3a99ea6d84986f35ac8646fac7/raw/c58cede8dab4673c91a3db702d50f7447b373d98/ne_110m_land.json'
+    ).then(function (json: any) {
+      geojson = json;
+      console.log(geojson);
+      window.setInterval(update, 100);
+    });
+
+    d3.json(
+      'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'
+    ).then((data: any) => {
+      const countries: any = topojson.feature(data, data.objects.countries);
+      console.log(countries);
+
+      // g.selectAll('path')
+      //   .data(countries.features)
+      //   .enter()
+      //   .append('path')
+      //   .attr('class', 'country')
+      //   .attr('name', (d: any) => d.properties.name)
+      //   .attr('id', (d: any) => d.id)
+      //   .on('click', event => this.selected(event))
+      //   .on('mousemove', showTooltip)
+      //   .on('mouseout', (d, i) => tooltip.classed('hidden', true))
+      //   .attr('d', path);
+    });
+
+    function update() {
+      projection.rotate([yaw, -45]);
+
+      context.clearRect(0, 0, 800, 600);
+
+      context.lineWidth = 0.5;
+      context.strokeStyle = '#000';
+
+      context.beginPath();
+      geoGenerator({type: 'FeatureCollection', features: geojson.features});
+      context.stroke();
+
+      // Graticule
+      let graticule = d3.geoGraticule();
+      context.beginPath();
+      context.strokeStyle = '#ccc';
+      geoGenerator(graticule());
+      context.stroke();
+
+      yaw -= 0.2;
+    }
+  }
+
   private insertMap() {
     this.mapIsRendered = true;
     const projection = d3
-      .geoMercator()
-      .scale(140)
+      .geoOrthographic()
+      .scale(300)
       .translate([900 / 2, 600 / 1.4]);
 
     const path: any = d3.geoPath(projection);
@@ -140,10 +212,14 @@ export default class GeologationPage extends PageElement {
       .append('div')
       .attr('class', 'tooltip hidden');
 
-    let graticule = d3.geoGraticule().extent([
-      [-180, -90],
-      [180 - 0.1, 90 - 0.1],
-    ]);
+    // context.lineWidth = 1;
+
+    // let graticule = d3.geoGraticule().extent([
+    //   [-180, -90],
+    //   [180 - 0.1, 90 - 0.1],
+    // ]);
+
+    let graticule = d3.geoGraticule();
 
     const svg = d3
       .select(this._svg)
@@ -162,57 +238,29 @@ export default class GeologationPage extends PageElement {
 
     const g = svg.append('g');
 
+    // graticule();
+
+    // g.datum(graticule).attr('class', 'back-line');
+
     d3.json(
       'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'
     ).then((data: any) => {
       const countries: any = topojson.feature(data, data.objects.countries);
 
-      let backLine = svg
-        .append('path')
-        .datum(graticule)
-        .attr('class', 'back-line')
-        .attr('d', path);
-
-      let backCountry = svg
-        .selectAll('.back-country')
-        .data(countries)
-        .enter()
-        .insert('path', '.back-line')
-        .attr('class', 'back-country')
-        .attr('d', path);
-
-      projection.clipAngle(90);
-
-      let line = svg
-        .append('path')
-        .datum(graticule)
-        .attr('class', 'line')
-        .attr('d', path);
-
-      let country = svg
-        .selectAll('.country')
-        .data(countries)
-        .enter()
-        .insert('path', '.line')
-        .attr('class', 'country')
-        .attr('d', path);
-
-      g.selectAll('path')
+      let test = g
+        .selectAll('path')
         .data(countries.features)
         .enter()
         .append('path')
         .attr('class', 'country')
         .attr('name', (d: any) => d.properties.name)
         .attr('id', (d: any) => d.id)
-        // .append('circle')
-        // .attr('cx', 500 / 2)
-        // .attr('cy', 500 / 2)
-        // .attr('r', projection.scale())
         .on('click', event => this.selected(event))
         .on('mousemove', showTooltip)
         .on('mouseout', (d, i) => tooltip.classed('hidden', true))
-        // .datum(graticule)
         .attr('d', path);
+
+      // test.datum(graticule).attr('class', 'back-line').attr('d', path);
     });
 
     const showTooltip = (d: any) => {
@@ -234,10 +282,6 @@ export default class GeologationPage extends PageElement {
         )
         .html(label);
     };
-  }
-
-  private anotherMap() {
-    // let centroid = d3.geoPath().projection(() => d).centroid;
   }
 
   private selected(event: any) {

@@ -120,3 +120,16 @@
     display: inline;
   }
 }
+
+
+.canvas {
+
+  padding: 5rem;
+}
+
+.back-line {
+  fill: none;
+  stroke: #000;
+  stroke-opacity: .05;
+  stroke-width: .5px;
+}
