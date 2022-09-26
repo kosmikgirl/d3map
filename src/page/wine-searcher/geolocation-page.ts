@@ -124,75 +124,76 @@ export default class GeologationPage extends PageElement {
     this.isCardVisible = false;
   }
 
-  private insertNewMap() {
-    this.mapIsRendered = true;
-    let geojson: any = {};
-    this.mapIsRendered = true;
+  // private insertNewMap() {
+  //   this.mapIsRendered = true;
+  //   let geojson: any = {};
+  //   this.mapIsRendered = true;
 
-    let context = d3.select(this._canvas).node().getContext('2d');
+  //   let context = d3.select(this._canvas).node().getContext('2d');
 
-    let projection = d3.geoOrthographic().scale(300);
+  //   let projection = d3.geoOrthographic().scale(300);
 
-    let geoGenerator = d3
-      .geoPath()
-      .projection(projection)
-      .pointRadius(4)
-      .context(context);
+  //   let geoGenerator = d3
+  //     .geoPath()
+  //     .projection(projection)
+  //     .pointRadius(4)
+  //     .context(context);
 
-    let yaw = 300;
+  //   let yaw = 300;
 
-    d3.json(
-      'https://gist.githubusercontent.com/d3indepth/f28e1c3a99ea6d84986f35ac8646fac7/raw/c58cede8dab4673c91a3db702d50f7447b373d98/ne_110m_land.json'
-    ).then(function (json: any) {
-      geojson = json;
-      console.log(geojson);
-      window.setInterval(update, 100);
-    });
+  //   d3.json(
+  //     'https://gist.githubusercontent.com/d3indepth/f28e1c3a99ea6d84986f35ac8646fac7/raw/c58cede8dab4673c91a3db702d50f7447b373d98/ne_110m_land.json'
+  //   ).then(function (json: any) {
+  //     geojson = json;
+  //     console.log(geojson);
+  //     window.setInterval(update, 100);
+  //   });
 
-    d3.json(
-      'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'
-    ).then((data: any) => {
-      const countries: any = topojson.feature(data, data.objects.countries);
-      console.log(countries);
+  //   d3.json(
+  //     'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'
+  //   ).then((data: any) => {
+  //     const countries: any = topojson.feature(data, data.objects.countries);
+  //     console.log(countries);
 
-      // g.selectAll('path')
-      //   .data(countries.features)
-      //   .enter()
-      //   .append('path')
-      //   .attr('class', 'country')
-      //   .attr('name', (d: any) => d.properties.name)
-      //   .attr('id', (d: any) => d.id)
-      //   .on('click', event => this.selected(event))
-      //   .on('mousemove', showTooltip)
-      //   .on('mouseout', (d, i) => tooltip.classed('hidden', true))
-      //   .attr('d', path);
-    });
+  //     // g.selectAll('path')
+  //     //   .data(countries.features)
+  //     //   .enter()
+  //     //   .append('path')
+  //     //   .attr('class', 'country')
+  //     //   .attr('name', (d: any) => d.properties.name)
+  //     //   .attr('id', (d: any) => d.id)
+  //     //   .on('click', event => this.selected(event))
+  //     //   .on('mousemove', showTooltip)
+  //     //   .on('mouseout', (d, i) => tooltip.classed('hidden', true))
+  //     //   .attr('d', path);
+  //   });
 
-    function update() {
-      projection.rotate([yaw, -45]);
+  //   function update() {
+  //     projection.rotate([yaw, -45]);
 
-      context.clearRect(0, 0, 800, 600);
+  //     context.clearRect(0, 0, 800, 600);
 
-      context.lineWidth = 0.5;
-      context.strokeStyle = '#000';
+  //     context.lineWidth = 0.5;
+  //     context.strokeStyle = '#000';
 
-      context.beginPath();
-      geoGenerator({type: 'FeatureCollection', features: geojson.features});
-      context.stroke();
+  //     context.beginPath();
+  //     geoGenerator({type: 'FeatureCollection', features: geojson.features});
+  //     context.stroke();
 
-      // Graticule
-      let graticule = d3.geoGraticule();
-      context.beginPath();
-      context.strokeStyle = '#ccc';
-      geoGenerator(graticule());
-      context.stroke();
+  //     // Graticule
+  //     let graticule = d3.geoGraticule();
+  //     context.beginPath();
+  //     context.strokeStyle = '#ccc';
+  //     geoGenerator(graticule());
+  //     context.stroke();
 
-      yaw -= 0.2;
-    }
-  }
+  //     yaw -= 0.2;
+  //   }
+  // }
 
   private insertMap() {
     this.mapIsRendered = true;
+
     const projection = d3
       .geoOrthographic()
       .scale(300)
@@ -212,14 +213,8 @@ export default class GeologationPage extends PageElement {
       .append('div')
       .attr('class', 'tooltip hidden');
 
-    // context.lineWidth = 1;
-
-    // let graticule = d3.geoGraticule().extent([
-    //   [-180, -90],
-    //   [180 - 0.1, 90 - 0.1],
-    // ]);
-
-    let graticule = d3.geoGraticule();
+    // let graticule = d3.geoGraticule();
+    // path(graticule());
 
     const svg = d3
       .select(this._svg)
@@ -237,10 +232,6 @@ export default class GeologationPage extends PageElement {
       .call(zoom);
 
     const g = svg.append('g');
-
-    // graticule();
-
-    // g.datum(graticule).attr('class', 'back-line');
 
     d3.json(
       'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'
@@ -301,25 +292,4 @@ export default class GeologationPage extends PageElement {
       })
       .catch(err => console.log(err));
   }
-
-  // private insertChart() {
-  //   const data = [4, 8, 15, 50, 23, 42];
-
-  //   const div = d3.create("div")
-  //   .style("font", "10px sans-serif")
-  //   .style("text-align", "right")
-  //   .style("color", "white");
-
-  //   div.selectAll("div")
-  //   .data(data)
-  //   .join("div")
-  //     .style("background", "steelblue")
-  //     .style("padding", "3px")
-  //     .style("margin", "1px")
-  //     .style("width", d => `${d * 10}px`)
-  //     .text(d => d);
-
-  //   console.log(div.node())
-  //   return div.node();
-  // }
 }
