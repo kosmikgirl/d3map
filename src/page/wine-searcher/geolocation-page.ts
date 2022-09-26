@@ -1,11 +1,13 @@
 import {customElement, property, state} from 'lit/decorators.js';
+import {pointer, select, Selection} from 'd3-selection';
 import PageElement from '../abstract/page-element';
 import {html, css, nothing} from 'lit';
 import * as d3 from 'd3';
 import * as topojson from 'topojson';
 import styles from './geolocation-page.scss';
 import {query} from 'lit/decorators/query.js';
-import {zoom} from 'd3';
+import {D3DragEvent, zoom} from 'd3';
+import {drag} from 'd3-drag';
 import Fontawesome from 'lit-fontawesome';
 import {CountryTypes} from '../../data/type/country-types';
 
@@ -51,6 +53,11 @@ export default class GeologationPage extends PageElement {
     console.log(changedProperties); // logs previous values
     console.log(this.countryInformation.borders); // logs current value
     console.log(this.mapIsRendered);
+
+    // const svg = select<SVGAElement, unknown>(this._svg);
+    // const _drag = drag<SVGSVGElement, unknown>().on('drag', this.dragged);
+    // console.log(svg, _drag);
+    // svg.call(_drag);
   }
 
   render() {
@@ -191,15 +198,22 @@ export default class GeologationPage extends PageElement {
   //   }
   // }
 
-  private insertMap() {
-    this.mapIsRendered = true;
-
-    const projection = d3
+  get projectionGetter() {
+    return d3
       .geoOrthographic()
       .scale(300)
       .translate([900 / 2, 600 / 1.4]);
+  }
 
-    const path: any = d3.geoPath(projection);
+  private insertMap() {
+    this.mapIsRendered = true;
+
+    // const projection = d3
+    //   .geoOrthographic()
+    //   .scale(300)
+    //   .translate([900 / 2, 600 / 1.4]);
+
+    const path: any = d3.geoPath(this.projectionGetter);
 
     const scale = 1;
     let mouseClicked = false;
@@ -291,5 +305,16 @@ export default class GeologationPage extends PageElement {
         this.isCardVisible = true;
       })
       .catch(err => console.log(err));
+  }
+
+  private dragged(event: D3DragEvent<SVGSVGElement, undefined, HTMLElement>) {
+    const sensitivity = 75;
+    const rotate = this.projectionGetter.rotate();
+    const k = sensitivity / this.projectionGetter.scale();
+
+    this.projectionGetter.rotate([
+      rotate[0] + event.dx * k,
+      rotate[1] - event.dy * k,
+    ]);
   }
 }
