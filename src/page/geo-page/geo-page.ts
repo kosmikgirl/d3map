@@ -1,16 +1,37 @@
-import {customElement, query} from 'lit/decorators.js';
+import {customElement, property, query, state} from 'lit/decorators.js';
 import PageElement from '../abstract/page-element';
-import {html, css} from 'lit';
+import {html, css, nothing} from 'lit';
 import styles from './geo-page.scss';
 import * as d3 from 'd3';
 import * as topojson from 'topojson';
+import {CountryTypes} from '../../data/type/country-types';
+import Fontawesome from 'lit-fontawesome';
 
 @customElement('geo-page')
 export default class GeoPage extends PageElement {
-  static styles = css([styles] as unknown as TemplateStringsArray);
+  // static styles = css([styles] as unknown as TemplateStringsArray);
+
+  static styles = [
+    Fontawesome,
+    css([styles] as ReadonlyArray<string> as TemplateStringsArray),
+  ];
+
+  @property({type: String})
+  apiEndpoint = 'https://restcountries.com/v3.1';
+
+  @property({type: Object})
+  countryInformation: CountryTypes = {};
 
   @query('#map') _map: any;
   @query('#rightbox') _rightbox: any;
+  @query('.country') _country: any;
+  @query('.graticule') _graticule: any;
+
+  @query('.selected')
+  _selected: any;
+
+  @state() myCountries: any;
+  @state() isCardVisible: boolean = false;
 
   constructor() {
     super({title: 'Geo page'});
@@ -57,24 +78,26 @@ export default class GeoPage extends PageElement {
       .attr('d', path);
 
     d3.json('src/world-countries.json').then((collection: any) => {
-      console.log(collection);
-      var countries = svg
+      // var countries = svg
+      //   .selectAll('path')
+      //   .data(collection.features)
+      //   .enter()
+      //   .append('path')
+      //   .attr('d', path)
+      //   .attr('class', 'country')
+      //   .attr('id', (d: any) => d.id);
+
+      this.myCountries = svg
         .selectAll('path')
         .data(collection.features)
         .enter()
         .append('path')
         .attr('d', path)
         .attr('class', 'country')
-        .attr('id', (d: any) => d.id);
-      console.log(countries);
-
-      // const handleAsJson = (response: {json: () => any}) => response.json();
-      // const handleError = console.error; // or some such;
-      // fetch('src/world-temprature.tsv').then(handleAsJson).catch(handleError);
+        .attr('id', (d: any) => d.id)
+        .on('click', (event, d) => this.selected(event, d));
 
       d3.tsv('src/world-temperature.tsv').then((data: any) => {
-        // 60 is the number of class in temperature.css
-
         var quantile = d3
           .scaleQuantile()
           .domain([
@@ -104,7 +127,6 @@ export default class GeoPage extends PageElement {
           .attr('width', '20px')
           .attr('x', '0px')
           .attr('class', function (event: any, d: any) {
-            console.log(d);
             return 'temperature-' + d;
           });
 
@@ -136,7 +158,10 @@ export default class GeoPage extends PageElement {
         data.forEach(
           (e: {country: string; temperature: string | number}, i: any) => {
             temperatures.push({id: e.country, temperature: e.temperature});
-            d3.select('#' + e.country).attr('class', function (d) {
+            const selectedCountry = this.renderRoot.querySelector(
+              '#' + e.country
+            );
+            d3.select(selectedCountry).attr('class', function (d) {
               return 'country temperature-' + quantile(+e.temperature);
             });
           }
@@ -144,19 +169,18 @@ export default class GeoPage extends PageElement {
 
         let rightbox = d3.select(this._rightbox);
 
-        countries.on('mouseover', function (event: any, d: any) {
+        this.myCountries.on('mouseover', function (event: any, d: any) {
           var temperature = 0;
           for (var i = 0; i < temperatures.length; ++i) {
             if (temperatures[i].id === d.id) {
               temperature = temperatures[i].temperature;
             }
           }
-          console.log(event, d, 'd');
           rightbox.html(
-            '<div class="box-title"><h3>Température moyenne annuelle</h3></div>' +
-              'Pays : <span style="font-weight:bold;">' +
+            '<div class="box-title"><h3>Annual average temperature</h3></div>' +
+              'Country : <span style="font-weight:bold;">' +
               d.properties.name +
-              '</span><br/>Température : <span style="font-weight:bold;">' +
+              '</span><br/>Temperature : <span style="font-weight:bold;">' +
               temperature +
               '°'
           );
@@ -167,38 +191,25 @@ export default class GeoPage extends PageElement {
 
     var φ = d3.scaleLinear().domain([0, height]).range([90, -90]);
 
-    // var drag = d3.behavior
-    //   .drag()
-    //   .origin(function () {
-    //     var r = projection.rotate();
-    //     return {
-    //       x: λ.invert(r[0]),
-    //       y: φ.invert(r[1]),
-    //     };
-    //   })
-    //   .on('drag', function () {
-    //     projection.rotate([λ(d3.event.x), φ(d3.event.y)]);
-    //     svg.selectAll('.country').attr('d', path);
+    let started = () => {
+      var r = projection.rotate();
+      return {
+        x: λ.invert(r[0]),
+        y: φ.invert(r[1]),
+      };
+    };
 
-    //     svg.selectAll('.graticule').datum(graticule).attr('d', path);
-    //   });
+    let dragged = (event: any) => {
+      let xEvent = event.x; // d3.event.x
+      let yEvent = event.y; // d3.event.y
+      projection.rotate([λ(xEvent), φ(yEvent)]);
 
-    let drag = d3
-      .drag()
-      .on('start', d => {
-        var r = projection.rotate();
-        return {
-          x: λ.invert(r[0]),
-          y: φ.invert(r[1]),
-        };
-      })
-      .on('drag', (e, d) => {
-        projection.rotate([λ(e.x), φ(e.y)]);
-        svg.selectAll('.country').attr('d', path);
-        svg.selectAll('.graticule').datum(graticule).attr('d', path);
-      });
+      svg.selectAll('.country').attr('d', path);
+      svg.selectAll('.graticule').datum(graticule).attr('d', path);
+    };
 
-    console.log(drag);
+    let dragHandler = d3.drag().subject(started).on('drag', dragged);
+    dragHandler(svg);
   }
 
   disconnectedCallback(): void {
@@ -207,8 +218,82 @@ export default class GeoPage extends PageElement {
 
   firstUpdated(): void {}
 
+  selected(e: any, d: any) {
+    let countryId = e.path[0].id;
+    let countryName = d.properties.name;
+    this.callCountryApi(countryName);
+    d3.select(this._selected).classed('selected', false);
+    d3.select(e.path[0]).classed('selected', true);
+  }
+
+  private callCountryApi(name: String) {
+    fetch(`${this.apiEndpoint}/name/${name}`)
+      .then(res => res.json())
+      .then(data => {
+        this.countryInformation = data[0];
+        this.isCardVisible = true;
+      })
+      .catch(err => console.log(err));
+  }
+
+  private handleCloseCard() {
+    this.isCardVisible = false;
+  }
+
+  private insertCountryCard() {
+    return Object.keys(this.countryInformation).length !== 0
+      ? html`
+          <div class="country-details">
+            <div class="country-details-box">
+              <i class="fas fa-times" @click=${this.handleCloseCard}></i>
+              <ul>
+                <li>
+                  <b>Name:</b>
+                  ${this.countryInformation.name?.common}
+                </li>
+                <li>
+                  <b>Official Name:</b>
+                  ${this.countryInformation.name?.official}
+                </li>
+                <li>
+                  <b>Subregion:</b>
+                  ${this.countryInformation.subregion}
+                </li>
+                <li>
+                  <b>Capital City: </b>
+                  ${this.countryInformation.capital}
+                </li>
+                <li>
+                  <b>Population: </b>
+                  ${this.countryInformation.population}
+                </li>
+                <li>
+                  <b>Flag: </b>
+                  ${this.countryInformation.flag}
+                </li>
+                <li>
+                  <b>Borders: </b>
+                  ${this.countryInformation.borders?.map(
+                    (border, index, arr) => html`<p class="border">
+                      ${arr.length - 1 === index ? border : `${border},`}
+                    </p>`
+                  )}
+                </li>
+              </ul>
+            </div>
+          </div>
+        `
+      : nothing;
+  }
+
+  protected updated(
+    _changedProperties: Map<string | number | symbol, unknown>
+  ): void {
+    console.log(this.countryInformation);
+  }
+
   render() {
-    return html`<div>
+    return html`<div class="geopage-container">
       <div id="map" style="width:100%; height:100%;"></div>
       <button @click=${this.insertMap}>Insert Map</button>
       <div id="rightbox" class="box right-box">
@@ -217,6 +302,7 @@ export default class GeoPage extends PageElement {
         </div>
         <span style="font-style:italic;">Roll over a step </span>
       </div>
+      ${this.isCardVisible ? this.insertCountryCard() : nothing}
     </div>`;
   }
 }
