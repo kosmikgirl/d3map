@@ -14,7 +14,7 @@ a {
     font-size: 1rem;
     cursor: pointer;
     overflow: hidden;
-	height: 1.3em;
+	height: 2rem;
     width: 100%;
     display: flex;
     align-items: center;
@@ -34,6 +34,8 @@ a {
         -webkit-transition: -webkit-transform 0.3s;
         -moz-transition: -moz-transform 0.3s;
         transition: transform 0.3s;
+        font-family: "Bebas Neue", cursive;
+        font-size: 1.4rem;
 
         &::before {
             width: 120%;
@@ -44,7 +46,12 @@ a {
             -webkit-transform: translate3d(0,0,0);
             -moz-transform: translate3d(0,0,0);
             transform: translate3d(0,0,0);
+            // font-family: "Bebas Neue", cursive;
         }
     }
+
+    // slot {
+    //     font-family: "Bebas Neue", cursive;
+    // }
 
 }

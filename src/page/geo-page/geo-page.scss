@@ -125,6 +125,7 @@
 }
 
 .geopage-container {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -175,7 +176,7 @@
 button, button::after {
   width: 380px;
   height: 86px;
-  font-size: 36px;
+  font-size: 3rem;
   font-family: 'Bebas Neue', cursive;
   background: linear-gradient(45deg, transparent 5%, #FF013C 5%);
   border: 0;
@@ -196,7 +197,7 @@ button::after {
   --slice-4: inset(40% -6px 43% 0);
   --slice-5: inset(80% -6px 5% 0);
   
-  content: 'AVAILABLE NOW';
+  content: 'INSERT MAP';
   display: block;
   position: absolute;
   top: 0;
