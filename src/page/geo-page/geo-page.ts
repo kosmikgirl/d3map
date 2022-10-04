@@ -32,6 +32,7 @@ export default class GeoPage extends PageElement {
 
   @state() myCountries: any;
   @state() isCardVisible: boolean = false;
+  @state() isMapRendered: boolean = false;
 
   constructor() {
     super({title: 'Geo page'});
@@ -39,13 +40,10 @@ export default class GeoPage extends PageElement {
 
   connectedCallback(): void {
     super.connectedCallback();
-
-    // this._map.call(drag);
-
-    // svg.call(drag);
   }
 
   insertMap() {
+    this.isMapRendered = true;
     var width = 1000,
       height = 1000;
 
@@ -56,8 +54,6 @@ export default class GeoPage extends PageElement {
       .clipAngle(90)
       .precision(0.1)
       .rotate([0, 0, 0]);
-
-    // var path = d3.geoPath().projection(projection);
 
     const path: any = d3.geoPath(projection);
 
@@ -295,7 +291,10 @@ export default class GeoPage extends PageElement {
   render() {
     return html`<div class="geopage-container">
       <div id="map" style="width:100%; height:100%;"></div>
-      <button @click=${this.insertMap}>Insert Map</button>
+      ${!this.isMapRendered
+        ? html` <button @click=${this.insertMap}>Insert Map</button>`
+        : nothing}
+
       <div id="rightbox" class="box right-box">
         <div class="box-title">
           <h3>Annual average temperature</h3>
