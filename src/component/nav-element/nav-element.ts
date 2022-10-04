@@ -24,14 +24,6 @@ export class NavElement extends LitElement {
       </router-link>
       <router-link
         .to=${{
-          name: RouteNames.GEOLOCATION_PAGE,
-        }}
-        title="Geolocation Page"
-      >
-        Geolocation Page
-      </router-link>
-      <router-link
-        .to=${{
           name: RouteNames.GEO_PAGE,
         }}
         title="Geo Page"
