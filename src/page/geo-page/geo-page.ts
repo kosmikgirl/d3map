@@ -267,14 +267,6 @@ export default class GeoPage extends PageElement {
                   <b>Flag: </b>
                   ${this.countryInformation.flag}
                 </li>
-                <li>
-                  <b>Borders: </b>
-                  ${this.countryInformation.borders?.map(
-                    (border, index, arr) => html`<p class="border">
-                      ${arr.length - 1 === index ? border : `${border},`}
-                    </p>`
-                  )}
-                </li>
               </ul>
             </div>
           </div>

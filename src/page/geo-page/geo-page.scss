@@ -41,7 +41,8 @@
     border-radius: 6px;
     box-sizing: border-box;
     display: none;
-    padding: 10px;
+    padding: 2rem;
+    font-size: 1.3rem;
     display: block;
     color: white;
     position: absolute;
@@ -121,7 +122,7 @@
 // }
 
 .selected {
-  fill: #481865;
+  fill: #FF1C9D;
 }
 
 .geopage-container {
@@ -139,7 +140,7 @@
   font-size: 1.3rem;
   display: flex;
   justify-content: center;
-  max-width: 350px;
+  max-width: 750px;
   border-radius: 5px;
   box-shadow: 0px 30px 40px -20px var(--grayishBlue);
   border-top: 3px solid var(--cyan);
