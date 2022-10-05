@@ -4,7 +4,6 @@ import {connect} from 'pwa-helpers';
 import store from '../store/store';
 import {AppState, setIsInitialized} from '../store/module/app';
 import SEO from '../util/seo';
-import CatImage from '../asset/image/cat.jpg?webp';
 import '../component/router/router-element/router-element';
 import '../component/nav-element/nav-element';
 import '../component/image-element/image-element';
@@ -12,7 +11,7 @@ import styles from './app-root.scss';
 
 @customElement('app-root')
 export class AppRoot extends connect(store)(LitElement) {
-  static styles = [ css([styles] as unknown as TemplateStringsArray) ];
+  static styles = [css([styles] as unknown as TemplateStringsArray)];
 
   @state() private isInitialized = false;
 
@@ -49,7 +48,6 @@ export class AppRoot extends connect(store)(LitElement) {
 
     // this is how to set an image
     // <image-element .imageSet=${CatImage} alt="Cat"></image-element>
-
 
     // this is to set the title
     // <h1>${!this.isInitialized ? 'Loading...' : 'Lit Scaffold'}</h1>

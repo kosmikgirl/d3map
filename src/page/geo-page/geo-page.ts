@@ -6,6 +6,7 @@ import * as d3 from 'd3';
 import * as topojson from 'topojson';
 import {CountryTypes} from '../../data/type/country-types';
 import Fontawesome from 'lit-fontawesome';
+import '../../component/country-card/country-card';
 
 @customElement('geo-page')
 export default class GeoPage extends PageElement {
@@ -42,7 +43,7 @@ export default class GeoPage extends PageElement {
     super.connectedCallback();
   }
 
-  insertMap() {
+  private insertMap() {
     this.isMapRendered = true;
     var width = 1000,
       height = 1000;
@@ -74,15 +75,6 @@ export default class GeoPage extends PageElement {
       .attr('d', path);
 
     d3.json('src/world-countries.json').then((collection: any) => {
-      // var countries = svg
-      //   .selectAll('path')
-      //   .data(collection.features)
-      //   .enter()
-      //   .append('path')
-      //   .attr('d', path)
-      //   .attr('class', 'country')
-      //   .attr('id', (d: any) => d.id);
-
       this.myCountries = svg
         .selectAll('path')
         .data(collection.features)
@@ -212,9 +204,7 @@ export default class GeoPage extends PageElement {
     super.disconnectedCallback();
   }
 
-  firstUpdated(): void {}
-
-  selected(e: any, d: any) {
+  private selected(e: any, d: any) {
     let countryId = e.path[0].id;
     let countryName = d.properties.name;
     this.callCountryApi(countryName);
@@ -242,32 +232,9 @@ export default class GeoPage extends PageElement {
           <div class="country-details">
             <div class="country-details-box">
               <i class="fas fa-times" @click=${this.handleCloseCard}></i>
-              <ul>
-                <li>
-                  <b>Name:</b>
-                  ${this.countryInformation.name?.common}
-                </li>
-                <li>
-                  <b>Official Name:</b>
-                  ${this.countryInformation.name?.official}
-                </li>
-                <li>
-                  <b>Subregion:</b>
-                  ${this.countryInformation.subregion}
-                </li>
-                <li>
-                  <b>Capital City: </b>
-                  ${this.countryInformation.capital}
-                </li>
-                <li>
-                  <b>Population: </b>
-                  ${this.countryInformation.population}
-                </li>
-                <li>
-                  <b>Flag: </b>
-                  ${this.countryInformation.flag}
-                </li>
-              </ul>
+              <country-card
+                .countryInformation=${this.countryInformation}
+              ></country-card>
             </div>
           </div>
         `
