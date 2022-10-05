@@ -4,7 +4,6 @@ import {RouteNames, RouteDataParam} from '../data/enum/';
 import '../page/home-page/home-page';
 import '../page/about-page/about-page';
 import '../page/not-found-page/not-found-page';
-import '../page/wine-searcher/geolocation-page';
 import '../page/geo-page/geo-page';
 
 export const routes: ReadonlyArray<RouteType> = [
@@ -22,11 +21,6 @@ export const routes: ReadonlyArray<RouteType> = [
     name: RouteNames.NOT_FOUND,
     path: '/404',
     tag: literal`not-found-page`,
-  },
-  {
-    name: RouteNames.GEOLOCATION_PAGE,
-    path: '/geolocation-page',
-    tag: literal`geolocation-page`,
   },
   {
     name: RouteNames.GEO_PAGE,
