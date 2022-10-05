@@ -48,6 +48,7 @@ export default class GeoPage extends PageElement {
     var width = 1000,
       height = 1000;
 
+    // Create the map projection
     var projection = d3
       .geoOrthographic()
       .scale(475)
@@ -56,10 +57,13 @@ export default class GeoPage extends PageElement {
       .precision(0.1)
       .rotate([0, 0, 0]);
 
+    // Store the geoPath in a constant
     const path: any = d3.geoPath(projection);
 
+    // Create the geographic graticule
     var graticule = d3.geoGraticule();
 
+    // Add attributes to selected element in the DOM
     let svg = d3
       .select(this._map)
       .append('svg')
@@ -74,6 +78,7 @@ export default class GeoPage extends PageElement {
       .attr('class', 'graticule')
       .attr('d', path);
 
+    // Create worldwide map with paths in json file
     d3.json('src/world-countries.json').then((collection: any) => {
       this.myCountries = svg
         .selectAll('path')
@@ -85,6 +90,7 @@ export default class GeoPage extends PageElement {
         .attr('id', (d: any) => d.id)
         .on('click', (event, d) => this.selected(event, d));
 
+      // Append the countries with the average temperatures
       d3.tsv('src/world-temperature.tsv').then((data: any) => {
         var quantile = d3
           .scaleQuantile()
@@ -103,6 +109,7 @@ export default class GeoPage extends PageElement {
           .attr('transform', 'translate(40, 10)')
           .attr('id', 'legend');
 
+        // Create side colorbar
         legend
           .selectAll('.colorbar')
           .data(d3.range(60))
@@ -118,6 +125,7 @@ export default class GeoPage extends PageElement {
             return 'temperature-' + d;
           });
 
+        // Create color scale
         let legendScale = d3
           .scaleLinear()
           .domain([
@@ -136,6 +144,7 @@ export default class GeoPage extends PageElement {
 
         let legendAxis = d3.axisLeft(legendScale);
 
+        // Legend labels for the color sidebar
         let legendLabels = svg
           .append('g')
           .attr('transform', 'translate(30, 10)')
@@ -143,6 +152,8 @@ export default class GeoPage extends PageElement {
           .call(legendAxis);
 
         let temperatures: any = [];
+
+        // Add average temperatures to each country
         data.forEach(
           (e: {country: string; temperature: string | number}, i: any) => {
             temperatures.push({id: e.country, temperature: e.temperature});
@@ -157,6 +168,7 @@ export default class GeoPage extends PageElement {
 
         let rightbox = d3.select(this._rightbox);
 
+        // Show the average temperatures on hover each country
         this.myCountries.on('mouseover', function (event: any, d: any) {
           var temperature = 0;
           for (var i = 0; i < temperatures.length; ++i) {
@@ -168,15 +180,16 @@ export default class GeoPage extends PageElement {
             '<div class="box-title"><h3>Annual average temperature</h3></div>' +
               'Country : <span style="font-weight:bold;">' +
               d.properties.name +
-              '</span><br/>Temperature : <span style="font-weight:bold;">' +
+              '</span><br/>Average Temperature : <span style="font-weight:bold;">' +
               temperature +
               '°'
           );
         });
       });
     });
-    var λ = d3.scaleLinear().domain([0, width]).range([-180, 180]);
 
+    // Create axisY and axisX for the dragged function
+    var λ = d3.scaleLinear().domain([0, width]).range([-180, 180]);
     var φ = d3.scaleLinear().domain([0, height]).range([90, -90]);
 
     let started = () => {
@@ -196,6 +209,7 @@ export default class GeoPage extends PageElement {
       svg.selectAll('.graticule').datum(graticule).attr('d', path);
     };
 
+    // Function to drag and move the geopath
     let dragHandler = d3.drag().subject(started).on('drag', dragged);
     dragHandler(svg);
   }
