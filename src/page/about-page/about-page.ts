@@ -21,7 +21,9 @@ export default class AboutPage extends PageElement {
 
       <p>
         I'm
-        <a href="https://www.linkedin.com/in/rochajulianacarolina/"
+        <a
+          href="https://www.linkedin.com/in/rochajulianacarolina/"
+          target="_blank"
           >Juliana Rocha,</a
         >
         front end developer, born and raised in Argentina, working in the IT
