@@ -23,8 +23,11 @@ export class CountryCard extends LitElement {
   firstUpdated(): void {}
 
   render() {
-    const {name, subregion, capital, population, flag} =
+    const {name, subregion, capital, population, flag, currencies} =
       this.countryInformation;
+
+    const theCurrencies = Object.values(currencies)[0];
+
     return html`<ul>
       <li>
         <b>Name:</b>
@@ -49,6 +52,13 @@ export class CountryCard extends LitElement {
       <li>
         <b>Flag: </b>
         ${flag}
+      </li>
+      <li>
+        <b>Currency:</b>
+        <ul>
+          <li><b>Name:</b> ${theCurrencies.name}</li>
+          <li><b>Symbol:</b> ${theCurrencies.symbol}</li>
+        </ul>
       </li>
     </ul>`;
   }
