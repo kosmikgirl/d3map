@@ -15,8 +15,6 @@
 
 ## Installation
 
-`git clone git@bitbucket.org:mediamonks/lit-scaffold.git`
-
 After cloning run `npm install` and `npm run dev` in the project root to get started.
 
 ## Commands
