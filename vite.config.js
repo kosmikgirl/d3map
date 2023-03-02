@@ -57,6 +57,7 @@ export default defineConfig(({command, mode}) => {
       postcss({ exclude: "**/*.css", inject: false }),
       litcss({ include: "**/*.scss", exclude: "**/*.css" })
     ],
+    external: 'node_modules/lit-fontawesome/css/font.css'
   };
 
   if (command === 'build') {
