@@ -26,7 +26,7 @@ export class CountryCard extends LitElement {
     const {name, subregion, capital, population, flag, currencies} =
       this.countryInformation;
 
-    const theCurrencies = Object.values(currencies)[0];
+    const theCurrencies: any = Object.values(currencies)[0];
 
     return html`<ul>
       <li>
