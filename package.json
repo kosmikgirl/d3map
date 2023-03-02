@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "lit-localize build && vite build",
+    "build": "lit-localize build && vite build && vite export",
     "preview": "vite preview  --port 8080 --open",
     "deploy": "npm run build && gcloud app deploy app.yaml --project ${npm_package_name} --promote --quiet",
     "lint": "run-s lint:*",
