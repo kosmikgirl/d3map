@@ -1,13 +1,11 @@
-import {customElement, property, query, state} from 'lit/decorators.js';
-import PageElement from '../abstract/page-element';
-import {html, css, nothing} from 'lit';
-import styles from './geo-page.scss';
 import * as d3 from 'd3';
-import * as topojson from 'topojson';
-import {CountryTypes} from '../../data/type/country-types';
+import {css, html, nothing} from 'lit';
 import Fontawesome from 'lit-fontawesome';
+import {customElement, property, query, state} from 'lit/decorators.js';
 import '../../component/country-card/country-card';
-
+import {CountryTypes} from '../../data/type/country-types';
+import PageElement from '../abstract/page-element';
+import styles from './geo-page.scss';
 @customElement('geo-page')
 export default class GeoPage extends PageElement {
   // static styles = css([styles] as unknown as TemplateStringsArray);
@@ -43,7 +41,7 @@ export default class GeoPage extends PageElement {
     super.connectedCallback();
   }
 
-  private insertMap() {
+  private async insertMap() {
     this.isMapRendered = true;
     var width = 1000,
       height = 1000;
@@ -79,7 +77,7 @@ export default class GeoPage extends PageElement {
       .attr('d', path);
 
     // Create worldwide map with paths in json file
-    d3.json('src/world-countries.json').then((collection: any) => {
+    d3.json('/world-countries.json').then((collection: any) => {
       this.myCountries = svg
         .selectAll('path')
         .data(collection.features)
@@ -91,7 +89,7 @@ export default class GeoPage extends PageElement {
         .on('click', (event, d) => this.selected(event, d));
 
       // Append the countries with the average temperatures
-      d3.tsv('src/world-temperature.tsv').then((data: any) => {
+      d3.tsv('/world-temperature.tsv').then((data: any) => {
         var quantile = d3
           .scaleQuantile()
           .domain([
@@ -219,11 +217,10 @@ export default class GeoPage extends PageElement {
   }
 
   private selected(e: any, d: any) {
-    let countryId = e.path[0].id;
     let countryName = d.properties.name;
     this.callCountryApi(countryName);
     d3.select(this._selected).classed('selected', false);
-    d3.select(e.path[0]).classed('selected', true);
+    d3.select(e).classed('selected', true);
   }
 
   private callCountryApi(name: String) {

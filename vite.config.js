@@ -117,7 +117,7 @@ export default defineConfig(({command, mode}) => {
       ],
       build: {
         rollupOptions,
-        outDir: 'build',
+        outDir: 'dist',
         assetsDir: 'asset',
         minify: 'terser',
         TerserOptions: {
