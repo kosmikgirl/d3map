@@ -3,9 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "rimraf dist && tsc && rollup -c rollup.config.js",
+    "build": "lit-localize build && vite build",
     "preview": "vite preview  --port 8080 --open",
-    "deploy": "npm run build && gcloud app deploy app.yaml --project ${npm_package_name} --promote --quiet",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint 'src/**/*.{js,ts}'",
     "lint:lit-analyzer": "lit-analyzer",

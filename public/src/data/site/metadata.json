@@ -1,0 +1,21 @@
+{
+    "site": {
+        "author": "MediaMonks",
+        "authorType": "Organization",
+        "banner": {
+            "alt": "MediaMonks banner image",
+            "url": "src/asset/image/company/mediamonks.jpg"
+        },
+        "description": "Lit Scaffold",
+        "globalTitle": " | Lit Scaffold",
+        "language": "en",
+        "logo": "src/asset/image/company/mediamonks.jpg",
+        "social": {
+            "twitter": {
+                "url": "https://twitter.com/mediamonks",
+                "user": "@MediaMonks"
+            }
+        },
+        "title": "Lit Scaffold | Media.Monks"
+    }
+}
