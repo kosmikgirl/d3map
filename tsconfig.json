@@ -10,6 +10,7 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "useUnknownInCatchVariables": false,
+    "strictPropertyInitialization": false,
     "plugins": [
       {
         "name": "ts-lit-plugin",
