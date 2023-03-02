@@ -64,7 +64,7 @@ export default class GeoPage extends PageElement {
     var graticule = d3.geoGraticule();
 
     // Add attributes to selected element in the DOM
-    let svg = d3
+    let svg: d3.Selection<any, unknown, null, undefined> = d3
       .select(this._map)
       .append('svg')
       .attr('id', 'world')
